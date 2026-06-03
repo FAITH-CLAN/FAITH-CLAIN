@@ -1,3 +1,5 @@
+const { fetchAnimeImage } = require('../lib/animeImage');
+
 module.exports = {
   command: 'punch',
   aliases: ['punchme'],
@@ -8,6 +10,7 @@ module.exports = {
     try {
       const chatId = context.chatId || message?.key?.remoteJid;
       const by = message?.key?.participant || message?.key?.remoteJid || 'Someone';
+      const channelInfo = context.channelInfo || {};
       
       if (!chatId) return;
       
@@ -20,11 +23,23 @@ module.exports = {
       
       const byName = String(by).split('@')[0] || 'Someone';
       const targetName = String(target).split('@')[0] || 'Someone';
-      
-      await sock.sendMessage(chatId, {
-        text: `🥊 @${byName} punches @${targetName} — it was just a joke!`,
-        mentions: [by, target]
-      }, { quoted: message });
+      const caption = `🥊 @${byName} punches @${targetName} — it was just a joke!`;
+      const link = await fetchAnimeImage('punch');
+
+      if (link) {
+        await sock.sendMessage(chatId, {
+          image: { url: link },
+          caption,
+          mentions: [by, target],
+          ...channelInfo
+        }, { quoted: message });
+      } else {
+        await sock.sendMessage(chatId, {
+          text: caption,
+          mentions: [by, target],
+          ...channelInfo
+        }, { quoted: message });
+      }
     } catch (e) {
       console.error('Error in punch command:', e);
     }

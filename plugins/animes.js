@@ -56,7 +56,7 @@ const animuMenu =
 module.exports = {
   command: 'animes',
   aliases: ['animeimg', 'animepic'],
-  category: 'menu',
+  category: 'fun',
   description: 'Send random anime images',
   usage: '.animes <anime_name>',
 

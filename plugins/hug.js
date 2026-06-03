@@ -1,9 +1,9 @@
-const axios = require('axios');
 const { getGreeting, getSuccessWord } = require('../lib/funEmojis');
+const { fetchAnimeImage } = require('../lib/animeImage');
 
 module.exports = {
   command: 'hug',
-  aliases: ['cuddle', 'embrace'],
+  aliases: ['cuddle', 'embrace', 'hugh'],
   category: 'fun',
   description: 'Send a hug to someone',
   usage: '.hug @user (or reply)',
@@ -39,9 +39,7 @@ module.exports = {
     }
 
     try {
-      const res = await axios.get('https://api.waifu.pics/sfw/hug');
-      const link = res.data?.url || res.data?.link;
-      
+      const link = await fetchAnimeImage('hug');
       if (link) {
         const caption = `@${sender.split('@')[0]} sends a warm hug to @${target.split('@')[0]} 🤗💙\n${getSuccessWord()}`;
         await sock.sendMessage(chatId, {

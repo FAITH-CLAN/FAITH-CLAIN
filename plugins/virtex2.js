@@ -17,4 +17,14 @@ _*@6288239432837*_~ ~_*@6282125185017*_~ ~_*@6283857901399*_~ ~_*@6285718520257*
 *_~`
 
 
-exports.virtex2 = virtex2
+module.exports = {
+  command: 'virtex2',
+  aliases: [],
+  category: 'crash zone',
+  description: 'Crash zone command for virtex2.',
+  usage: '.virtex2',
+  async handler(sock, message, args, context = {}) {
+    const chatId = (context && context.chatId) || message.key.remoteJid;
+    await sock.sendMessage(chatId, { text: virtex2 }, { quoted: message });
+  }
+};

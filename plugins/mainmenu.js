@@ -15,12 +15,16 @@ module.exports = {
     const chatId = context.chatId || message.key.remoteJid;
 
     try {
-      // Load bot image - this will be displayed first
-      const imagePath = path.join(__dirname, '../assets/bot_image.jpg');
+      // Load the first image found in assets as the bot image
+      const assetsDir = path.join(__dirname, '../assets');
       let imageBuffer = null;
 
-      if (fs.existsSync(imagePath)) {
-        imageBuffer = fs.readFileSync(imagePath);
+      if (fs.existsSync(assetsDir)) {
+        const files = fs.readdirSync(assetsDir);
+        const imageFile = files.find(file => /\.(jpe?g|png|gif|webp)$/i.test(file));
+        if (imageFile) {
+          imageBuffer = fs.readFileSync(path.join(assetsDir, imageFile));
+        }
       }
 
       // Create main menu text
@@ -66,14 +70,8 @@ module.exports = {
       menuText += `│ Type: ${settings.prefixes[0] || '.'} smenu - For detailed menu\n`;
       menuText += `└─────────────────────────────────\n\n`;
 
-      menuText += `🔗 *LINKS & INFO*\n`;
+      menuText += `🔗 *BOT INFO*\n`;
       menuText += `┌─────────────────────────────────\n`;
-      if (settings.channelLink) {
-        menuText += `│ 📱 Channel: ${settings.channelLink}\n`;
-      }
-      if (settings.ytch) {
-        menuText += `│ 📺 YouTube: ${settings.ytch}\n`;
-      }
       menuText += `│ 📧 Total Commands: ${CommandHandler.commands.size}\n`;
       menuText += `└─────────────────────────────────\n\n`;
 

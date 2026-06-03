@@ -79,7 +79,7 @@ async function handleChannelDetection(sock, message) {
     }
 }
 
-module.exports = async (sock, chatId, message, userMessage) => {
+const handler = async (sock, chatId, message, userMessage) => {
     try {
         const adminStatus = await isAdmin(sock, chatId, message.key.participant || message.key.remoteJid);
         
@@ -115,6 +115,15 @@ module.exports = async (sock, chatId, message, userMessage) => {
         console.error('Error in antichannel:', error);
         await sock.sendMessage(chatId, { text: '❌ Error processing command' }, { quoted: message });
     }
+};;
+
+module.exports = {
+  command: 'antichannel',
+  aliases: [],
+  category: 'group',
+  description: 'Group management command',
+  usage: '.antichannel',
+  handler
 };
 
 module.exports.handleChannelDetection = handleChannelDetection;

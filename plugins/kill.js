@@ -1,3 +1,5 @@
+const { fetchAnimeImage } = require('../lib/animeImage');
+
 module.exports = {
   command: 'kill',
   aliases: ['frag'],
@@ -8,6 +10,7 @@ module.exports = {
     try {
       const chatId = context.chatId || message?.key?.remoteJid;
       const by = message?.key?.participant || message?.key?.remoteJid || 'Someone';
+      const channelInfo = context.channelInfo || {};
       
       if (!chatId) return;
       
@@ -20,11 +23,23 @@ module.exports = {
       
       const byName = String(by).split('@')[0] || 'Someone';
       const targetName = String(target).split('@')[0] || 'Someone';
-      
-      await sock.sendMessage(chatId, {
-        text: `💀 @${byName} has vanquished @${targetName}! (playfight, no harm)`,
-        mentions: [by, target]
-      }, { quoted: message });
+      const caption = `💀 @${byName} has vanquished @${targetName}! (playfight, no harm)`;
+      const link = await fetchAnimeImage('kill');
+
+      if (link) {
+        await sock.sendMessage(chatId, {
+          image: { url: link },
+          caption,
+          mentions: [by, target],
+          ...channelInfo
+        }, { quoted: message });
+      } else {
+        await sock.sendMessage(chatId, {
+          text: caption,
+          mentions: [by, target],
+          ...channelInfo
+        }, { quoted: message });
+      }
     } catch (e) {
       console.error('Error in kill command:', e);
     }

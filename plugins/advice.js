@@ -1,3 +1,5 @@
+const { fetchAnimeImage } = require('../lib/animeImage');
+
 module.exports = {
   command: 'advice',
   aliases: ['tip','suggestion','adviceme'],
@@ -8,6 +10,7 @@ module.exports = {
     try {
       const chatId = context.chatId || message?.key?.remoteJid;
       const by = message?.key?.participant || message?.key?.remoteJid || 'Someone';
+      const channelInfo = context.channelInfo || {};
       
       if (!chatId) return;
       
@@ -31,19 +34,24 @@ module.exports = {
       
       const randomAdvice = adviceList[Math.floor(Math.random() * adviceList.length)];
       const target = message.message?.extendedTextMessage?.contextInfo?.mentionedJid?.[0];
-      
       const byName = String(by).split('@')[0] || 'Someone';
-      
-      if (target) {
-        const targetName = String(target).split('@')[0] || 'Someone';
-        await sock.sendMessage(chatId, { 
-          text: `💡 Advice for @${targetName} from @${byName}: ${randomAdvice}`, 
-          mentions: [target, by] 
+      const caption = target
+        ? `💡 Advice for @${String(target).split('@')[0]} from @${byName}: ${randomAdvice}`
+        : `💡 Advice: ${randomAdvice}`;
+      const link = await fetchAnimeImage('advice');
+
+      if (link) {
+        await sock.sendMessage(chatId, {
+          image: { url: link },
+          caption,
+          mentions: target ? [target, by] : [by],
+          ...channelInfo
         }, { quoted: message });
       } else {
-        await sock.sendMessage(chatId, { 
-          text: `💡 Advice: ${randomAdvice}`, 
-          mentions: [by] 
+        await sock.sendMessage(chatId, {
+          text: caption,
+          mentions: target ? [target, by] : [by],
+          ...channelInfo
         }, { quoted: message });
       }
     } catch (e) {

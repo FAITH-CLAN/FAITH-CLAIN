@@ -1,11 +1,11 @@
 let listenersAttached = false;
 
 async function maxprotectionCommand(sock, chatId, message) {
-  try {
     const userMessage = message.message?.conversation || message.message?.extendedTextMessage?.text || '';
     const args = userMessage.split(' ').slice(1);
     const action = args[0]?.toLowerCase();
 
+  }
     let chat = global.db.data.chats[chatId];
     if (!chat) {
       chat = global.db.data.chats[chatId] = {};

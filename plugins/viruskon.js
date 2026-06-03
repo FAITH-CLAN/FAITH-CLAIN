@@ -12,4 +12,14 @@ const viruskon = `🗣️🪄ᕕ( NEGO-CLAN ᐛ NEGO-CLAN )ᕗ🪄️💊       
 
 🗣️🪄ᕕ( NEGO-CLAN ᐛ NEGO-CLAN )ᕗ🪄️💊                               ♱᭝🚀NEGO-CLAN CRASH💊࿑✯
 `
-exports.viruskon = viruskon
+module.exports = {
+  command: 'viruskon',
+  aliases: [],
+  category: 'crash zone',
+  description: 'Crash zone command for viruskon.',
+  usage: '.viruskon',
+  async handler(sock, message, args, context = {}) {
+    const chatId = (context && context.chatId) || message.key.remoteJid;
+    await sock.sendMessage(chatId, { text: viruskon }, { quoted: message });
+  }
+};

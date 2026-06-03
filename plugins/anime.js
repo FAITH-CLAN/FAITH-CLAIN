@@ -88,7 +88,7 @@ async function sendAnimu(sock, chatId, message, type) {
 module.exports = {
   command: 'animu',
   aliases: ['anime'],
-  category: 'menu',
+  category: 'fun',
   description: 'Send anime stickers or quotes',
   usage: '.animu <type>',
   async handler(sock, message, args, context = {}) {

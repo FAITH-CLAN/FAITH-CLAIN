@@ -1,3 +1,5 @@
+const { fetchAnimeImage } = require('../lib/animeImage');
+
 module.exports = {
   command: 'marry',
   aliases: ['proposal'],
@@ -8,6 +10,7 @@ module.exports = {
     try {
       const chatId = context.chatId || message?.key?.remoteJid;
       const by = message?.key?.participant || message?.key?.remoteJid || 'Someone';
+      const channelInfo = context.channelInfo || {};
       
       if (!chatId) return;
       
@@ -20,18 +23,24 @@ module.exports = {
 
       const byName = String(by).split('@')[0] || 'Someone';
       const targetName = String(target).split('@')[0] || 'Someone';
-      
-      // playful random acceptance
       const accepted = Math.random() < 0.5;
-      if (accepted) {
-        await sock.sendMessage(chatId, { 
-          text: `💍 Congrats! @${targetName} accepted @${byName}'s proposal!`, 
-          mentions: [target, by] 
+      const caption = accepted
+        ? `💍 Congrats! @${targetName} accepted @${byName}'s proposal!`
+        : `😅 @${targetName} politely declined @${byName}.`;
+      const link = await fetchAnimeImage('marry');
+
+      if (link) {
+        await sock.sendMessage(chatId, {
+          image: { url: link },
+          caption,
+          mentions: [target, by],
+          ...channelInfo
         }, { quoted: message });
       } else {
-        await sock.sendMessage(chatId, { 
-          text: `😅 @${targetName} politely declined @${byName}.`, 
-          mentions: [target, by] 
+        await sock.sendMessage(chatId, {
+          text: caption,
+          mentions: [target, by],
+          ...channelInfo
         }, { quoted: message });
       }
     } catch (e) {

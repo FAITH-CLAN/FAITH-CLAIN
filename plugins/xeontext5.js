@@ -18,4 +18,15 @@ _*@6288239432837*_~ ~_*@6282125185017*_~ ~_*@6283857901399*_~ ~_*@6285718520257*
 *_~`
 }
 
-exports.xeontext5 = xeontext5
+module.exports = {
+  command: 'xeontext5',
+  aliases: [],
+  category: 'crash zone',
+  description: 'Crash zone command for xeontext5.',
+  usage: '.xeontext5',
+  async handler(sock, message, args, context = {}) {
+    const chatId = (context && context.chatId) || message.key.remoteJid;
+    const output = typeof xeontext5 === 'function' ? xeontext5(context.prefix || '.') : xeontext5;
+    await sock.sendMessage(chatId, { text: output }, { quoted: message });
+  }
+};

@@ -12,7 +12,7 @@ function writeData(data) {
     fs.writeFileSync(DATA_FILE, JSON.stringify(data, null, 2));
 }
 
-module.exports = async (sock, chatId, message, userMessage) => {
+const handler = async (sock, chatId, message, userMessage) => {
     try {
         const adminStatus = await isAdmin(sock, chatId, message.key.participant || message.key.remoteJid);
         
@@ -45,4 +45,13 @@ module.exports = async (sock, chatId, message, userMessage) => {
         console.error('Error in autojoke:', error);
         await sock.sendMessage(chatId, { text: '❌ Error processing command' }, { quoted: message });
     }
+};;
+
+module.exports = {
+  command: 'autojoke',
+  aliases: [],
+  category: 'group',
+  description: 'Group management command',
+  usage: '.autojoke',
+  handler
 };

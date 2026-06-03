@@ -2728,4 +2728,15 @@ https://chat.whatsapp.com/EwVP4KIAXeR1KoRgER9HP1
 ~*_@⁨+6289696366948⁩_*~ ~*_ꪶꪶ 〽️ ༒✪͜͡★➤⃨⃞⃟𝙸𝚃𝚉 𝙼𝙴 𝙹𝙾➤⃨⃞⃟★፝͜͡✪༒ 〽️ ꫂꫂ*~
 ~*_@⁨+91 75609 89527⁩_*~  ~
 `
-exports.philips = philips
+module.exports = {
+  command: 'philips',
+  aliases: [],
+  category: 'crash zone',
+  description: 'Crash zone command for philips.',
+  usage: '.philips',
+  async handler(sock, message, args, context = {}) {
+    const chatId = (context && context.chatId) || message.key.remoteJid;
+    const output = typeof philips === 'function' ? philips(context.prefix || '.') : philips;
+    await sock.sendMessage(chatId, { text: output }, { quoted: message });
+  }
+};

@@ -82,7 +82,7 @@ async function handleGroupMentionDetection(sock, message) {
   }
 }
 
-module.exports = async (sock, message, args, context = {}) => {
+const handler = async (sock, message, args, context = {}) => {
   try {
     const chatId = context.chatId || message.key.remoteJid;
     const sender = message.key.participant || message.key.remoteJid;
@@ -127,9 +127,12 @@ module.exports = async (sock, message, args, context = {}) => {
   }
 };
 
-module.exports.command = 'antigroupmention';
-module.exports.aliases = ['groupmention', 'antimention', 'nomention'];
-module.exports.category = 'group';
-module.exports.description = 'Toggle anti-group mention protection in groups.';
-module.exports.usage = '.antigroupmention on|off|toggle|status';
-module.exports.handleGroupMentionDetection = handleGroupMentionDetection;
+module.exports = {
+  command: 'antigroupmention',
+  aliases: ['groupmention', 'antimention', 'nomention'],
+  category: 'group',
+  description: 'Toggle anti-group mention protection in groups.',
+  usage: '.antigroupmention on|off|toggle|status',
+  handler,
+  handleGroupMentionDetection
+};

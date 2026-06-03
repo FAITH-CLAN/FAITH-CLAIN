@@ -1,5 +1,5 @@
 const owners = require('../data/owner.json');
-const axios = require('axios');
+const { fetchAnimeImage } = require('../lib/animeImage');
 
 module.exports = {
   command: 'kiss',
@@ -15,7 +15,6 @@ module.exports = {
     const sender = message.key.participant || message.key.remoteJid;
 
     const mentioned = message.message?.extendedTextMessage?.contextInfo?.mentionedJid;
-    const quoted = message.message?.extendedTextMessage?.contextInfo?.quotedMessage;
     const quotedParticipant = message.message?.extendedTextMessage?.contextInfo?.participant;
     let target = null;
 
@@ -38,8 +37,7 @@ module.exports = {
     }
 
     try {
-      const res = await axios.get('https://api.waifu.pics/sfw/kiss');
-      const link = res.data?.url || res.data?.link;
+      const link = await fetchAnimeImage('kiss');
       if (link) {
         const caption = `@${sender.split('@')[0]} kisses @${target.split('@')[0]} 💋`;
         await sock.sendMessage(chatId, {
@@ -49,7 +47,7 @@ module.exports = {
           ...channelInfo
         }, { quoted: message });
       } else {
-        throw new Error('no link');
+        throw new Error('no image link');
       }
     } catch (err) {
       console.error('Error in kiss command:', err);
