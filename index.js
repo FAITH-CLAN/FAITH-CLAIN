@@ -549,7 +549,12 @@ async function startChrisDev() {
                 console.log(chalk.blue(`Bot Version: ${settings.version}`));
                 console.log(chalk.cyan(`Loaded Commands: ${commandHandler.commands.size}`));
                 console.log(chalk.cyan(`Prefixes: ${settings.prefixes.join(', ')}`));
-                console.log(chalk.gray(`Backend: ${store.getStats().backend}`));
+                try {
+                    const stats = store && store.getStats ? store.getStats() : { backend: 'local' };
+                    console.log(chalk.gray(`Backend: ${stats.backend}`));
+                } catch (e) {
+                    console.log(chalk.gray(`Backend: local`));
+                }
                 console.log();
             }
             
